@@ -73,45 +73,53 @@ namespace WeatherInMoscow.Controllers
              return View();
         }
 
-        [HttpPost] 
+        [HttpPost]
         public ActionResult UploadWeatherData(HttpPostedFileBase[] importedFiles)
-        {            
+        {
             WeatherContext db = new WeatherContext();
-            foreach (var importedFile in importedFiles)
+            try
             {            
-                ISheet sheet;
-                XSSFWorkbook hssfwb = new XSSFWorkbook(importedFile.InputStream); //Только для .xlsx. При не обходимости можно добавить xls
-                for (int i = 0; i < 12; i++)
+                foreach (var importedFile in importedFiles)
                 {
-                    sheet = hssfwb.GetSheetAt(i);
-                    for (int row = 4; row <= sheet.LastRowNum; row++)
+                    ISheet sheet;
+                    XSSFWorkbook hssfwb = new XSSFWorkbook(importedFile.InputStream); //Только для .xlsx. При не обходимости можно добавить xls
+                    for (int i = 0; i < 12; i++)
                     {
-                        try
-                        {                        
-                            db.Weathers.Add
-                            (new Weather
-                            {
-                                WeatherDateTime = DateTime.ParseExact($"{sheet.GetRow(row).GetCell(0)} {sheet.GetRow(row).GetCell(1)}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture),
-                                Temperature = Double.TryParse($"{sheet.GetRow(row).GetCell(2)}", out var tempT) ? tempT : (double?)null,
-                                Humidity = Double.TryParse($"{sheet.GetRow(row).GetCell(3)}", out var tempH) ? tempH : (double?)null,
-                                Dewpoint = Double.TryParse($"{sheet.GetRow(row).GetCell(4)}", out var tempD) ? tempD : (double?)null,
-                                Pressure = Int32.TryParse($"{sheet.GetRow(row).GetCell(5)}", out var tempP) ? tempP : (int?)null,
-                                WindDirection = $"{sheet.GetRow(row).GetCell(6)}",
-                                WindSpeed = Int32.TryParse($"{sheet.GetRow(row).GetCell(7)}", out var tempWS) ? tempWS : (int?)null,
-                                Cloudiness = Int32.TryParse($"{sheet.GetRow(row).GetCell(8)}", out var tempC) ? tempC : (int?)null,
-                                LowCloudCover = Int32.TryParse($"{sheet.GetRow(row).GetCell(9)}", out var tempLCC) ? tempLCC : (int?)null,
-                                HorizontalVisibility = Int32.TryParse($"{sheet.GetRow(row).GetCell(10)}", out var tempHV) ? tempHV : (int?)null,
-                                WeatherConditions = $"{sheet.GetRow(row).GetCell(11)}"
-                            }
-                            );
-                        
-                        }
-                        catch (Exception)
+                        sheet = hssfwb.GetSheetAt(i);
+                        for (int row = 4; row <= sheet.LastRowNum; row++)
                         {
-                            continue;
+                            try
+                            {
+                                db.Weathers.Add
+                                (new Weather
+                                {
+                                    WeatherDateTime = DateTime.ParseExact($"{sheet.GetRow(row).GetCell(0)} {sheet.GetRow(row).GetCell(1)}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture),
+                                    Temperature = Double.TryParse($"{sheet.GetRow(row).GetCell(2)}", out var tempT) ? tempT : (double?)null,
+                                    Humidity = Double.TryParse($"{sheet.GetRow(row).GetCell(3)}", out var tempH) ? tempH : (double?)null,
+                                    Dewpoint = Double.TryParse($"{sheet.GetRow(row).GetCell(4)}", out var tempD) ? tempD : (double?)null,
+                                    Pressure = Int32.TryParse($"{sheet.GetRow(row).GetCell(5)}", out var tempP) ? tempP : (int?)null,
+                                    WindDirection = $"{sheet.GetRow(row).GetCell(6)}",
+                                    WindSpeed = Int32.TryParse($"{sheet.GetRow(row).GetCell(7)}", out var tempWS) ? tempWS : (int?)null,
+                                    Cloudiness = Int32.TryParse($"{sheet.GetRow(row).GetCell(8)}", out var tempC) ? tempC : (int?)null,
+                                    LowCloudCover = Int32.TryParse($"{sheet.GetRow(row).GetCell(9)}", out var tempLCC) ? tempLCC : (int?)null,
+                                    HorizontalVisibility = Int32.TryParse($"{sheet.GetRow(row).GetCell(10)}", out var tempHV) ? tempHV : (int?)null,
+                                    WeatherConditions = $"{sheet.GetRow(row).GetCell(11)}"
+                                }
+                                );
+
+                            }
+                            catch (Exception)
+                            {
+                                continue;
+                            }
                         }
                     }
                 }
+                ViewBag.Message = "Данные успешно загружены";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message; //Вероятно, стоило написать информацию для пользователя
             }
             db.SaveChanges();
             return View(); 
