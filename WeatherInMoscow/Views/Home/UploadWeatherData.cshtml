@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "UploadWeatherData";
+}
+
+<h2>UploadWeatherData</h2>
+
+<h2>Загрузить данные о погоде</h2>
+@using (Html.BeginForm("UploadWeatherData",
+                        "Home",
+                        FormMethod.Post,
+                        new { enctype = "multipart/form-data" }))
+{
+
+    <input type="file" multiple name="importedFiles"  id="importedFiles" />
+    <br>
+    <br>
+    <input type="submit" value="Загрузить в базу" />
+    <br>
+    <br>
+
+
+
+    @ViewBag.Message
+}	

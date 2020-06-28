@@ -1,0 +1,72 @@
+﻿body {
+    font-size: 13px;
+    font-family: Verdana, Arial, Helvetica, Sans-Serif;
+    background-color: #f7f7fa;
+    padding-left: 40px;
+}
+
+nav {
+    display: block;
+}
+
+.menu {
+    padding-left: 10px;
+}
+
+    .menu ul {
+        list-style: none;
+    }
+
+    .menu li {
+        display: inline;
+    }
+
+    .menu a:hover {
+        color: red;
+    }
+
+table {
+    vertical-align: middle;
+    text-align: left;
+}
+
+.header {
+    font-weight: bold;
+}
+
+td {
+    padding-right: 10px;
+}
+
+input {
+    width: 150px;
+}
+
+#weather {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    #weather td, #weather th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #weather tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #weather tr:hover {
+        background-color: #ddd;
+    }
+
+    #weather th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: center;
+        background-color: #4CAF50;
+        color: white;
+    }
