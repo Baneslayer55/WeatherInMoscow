@@ -20,8 +20,9 @@ namespace WeatherInMoscow.Controllers
             IQueryable<Weather> weathers = db.Weathers;
 
             List<int> years = (from yearInt in weathers
-                               select yearInt.WeatherDateTime.Year).Distinct().ToList();
-
+                               select yearInt.WeatherDateTime.Year).Distinct().ToList();//мне показалось это костылем. Есть подозрение, что ошибка при проектировании бд, а точнее таблиц
+                                                                                        //и связей между ними. Возможно, надо было создавать таблицы для различных моделей и содавать связи между ними
+                                                                                        //Осознание этого пришло поздно, рефакторинг приведет к срыву сроков                                                                                        
             years.Insert(0, 0);
 
             if (weathers.Count() == 0)
@@ -42,27 +43,27 @@ namespace WeatherInMoscow.Controllers
             {
                 weathers = weathers.Where(w => w.WeatherDateTime.Year == year);
             }
-            
-            List<MonthOfYears> monthOfYears = new List<MonthOfYears>(){
-                    new MonthOfYears { MonthId = 0, MonthName = "Все месяца" },
-                    new MonthOfYears { MonthId = 1, MonthName = "Январь" },
-                    new MonthOfYears { MonthId = 2, MonthName = "Февраль" },
-                    new MonthOfYears { MonthId = 3, MonthName = "Март" },
-                    new MonthOfYears { MonthId = 4, MonthName = "Апрель" },
-                    new MonthOfYears { MonthId = 5, MonthName = "Май" },
-                    new MonthOfYears { MonthId = 6, MonthName = "Июнь" },
-                    new MonthOfYears { MonthId = 7, MonthName = "Июль" },
-                    new MonthOfYears { MonthId = 8, MonthName = "Август" },
-                    new MonthOfYears { MonthId = 9, MonthName = "Сентябрь" },
-                    new MonthOfYears { MonthId = 10, MonthName = "Октябрь" },
-                    new MonthOfYears { MonthId = 11, MonthName = "Ноябрь" },
-                    new MonthOfYears { MonthId = 12, MonthName = "Декабрь" },
+            //не уверен, что хороший метод для создания листа
+            List<MonthSelectListModel> monthSelectList = new List<MonthSelectListModel>(){
+                    new MonthSelectListModel { MonthId = 0, MonthName = "Все месяца" },
+                    new MonthSelectListModel { MonthId = 1, MonthName = "Январь" },
+                    new MonthSelectListModel { MonthId = 2, MonthName = "Февраль" },
+                    new MonthSelectListModel { MonthId = 3, MonthName = "Март" },
+                    new MonthSelectListModel { MonthId = 4, MonthName = "Апрель" },
+                    new MonthSelectListModel { MonthId = 5, MonthName = "Май" },
+                    new MonthSelectListModel { MonthId = 6, MonthName = "Июнь" },
+                    new MonthSelectListModel { MonthId = 7, MonthName = "Июль" },
+                    new MonthSelectListModel { MonthId = 8, MonthName = "Август" },
+                    new MonthSelectListModel { MonthId = 9, MonthName = "Сентябрь" },
+                    new MonthSelectListModel { MonthId = 10, MonthName = "Октябрь" },
+                    new MonthSelectListModel { MonthId = 11, MonthName = "Ноябрь" },
+                    new MonthSelectListModel { MonthId = 12, MonthName = "Декабрь" },
                 };
 
             WeatherViewModel weatherViewModel = new WeatherViewModel
             {
                 Weathers = weathers.ToList(),
-                Month = new SelectList(monthOfYears, "MonthID", "MonthName"),
+                Month = new SelectList(monthSelectList, "MonthID", "MonthName"),
                 Year = new SelectList(years)
             };
             return View(weatherViewModel);
@@ -82,11 +83,11 @@ namespace WeatherInMoscow.Controllers
                 foreach (var importedFile in importedFiles)
                 {
                     ISheet sheet;
-                    XSSFWorkbook hssfwb = new XSSFWorkbook(importedFile.InputStream); //Только для .xlsx. При не обходимости можно добавить xls
-                    for (int i = 0; i < 12; i++)
+                    XSSFWorkbook excelFile = new XSSFWorkbook(importedFile.InputStream); //Только для .xlsx. При не обходимости можно добавить xls
+                    for (int i = 0; i < excelFile.NumberOfSheets; i++)
                     {
-                        sheet = hssfwb.GetSheetAt(i);
-                        for (int row = 4; row <= sheet.LastRowNum; row++)
+                        sheet = excelFile.GetSheetAt(i);
+                        for (int row = 0; row <= sheet.LastRowNum; row++)
                         {
                             try
                             {
@@ -106,7 +107,6 @@ namespace WeatherInMoscow.Controllers
                                     WeatherConditions = $"{sheet.GetRow(row).GetCell(11)}"
                                 }
                                 );
-
                             }
                             catch (Exception)
                             {

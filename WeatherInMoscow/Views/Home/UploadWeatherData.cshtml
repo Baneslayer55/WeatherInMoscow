@@ -10,11 +10,13 @@
                         FormMethod.Post,
                         new { enctype = "multipart/form-data" }))
 {
-    <input type="file" multiple name="importedFiles" id="importedFiles" />
+<center>
+    <input type="file" accept=".xlsx" multiple name="importedFiles" id="importedFiles" />
     <br>
     <br>
-    <input type="submit" value="Загрузить в базу" />
+    <input class="btn btn-default" type="submit" value="Загрузить в базу" />
     <br>
     <br>
     @ViewBag.Message
+</center>
 }

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace WeatherInMoscow.Models
 {
-    public class MonthOfYears
+    public class MonthSelectListModel
     {
         public int MonthId { get; set; }
 
