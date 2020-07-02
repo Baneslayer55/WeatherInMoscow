@@ -7,14 +7,13 @@
                             FormMethod.Post,
                             new { enctype = "multipart/form-data" }))
     {
-        <center>
-            <input type="file" accept=".xlsx" multiple name="importedFiles" id="importedFiles" />
-            <br>
-            <br>
-            <input class="btn btn-default" type="submit" value="Загрузить в базу" />
-            <br>
-            <br>
-            @ViewBag.Message
-        </center>
+<center>
+    <label for="file-upload" class="custom-file-upload">
+    Выберите файлы
+    </label>
+    <input id="file-upload" type="file" accept=".xlsx" multiple name="importedFiles"/><br/>
+    <input class="btn btn-default" type="submit" value="Загрузить в базу"/><br />
+    @ViewBag.Message
+</center>
     }
 </div>
