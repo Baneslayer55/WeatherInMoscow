@@ -25,9 +25,6 @@ namespace WeatherInMoscow.Controllers
             weatherViewModel.YearFilter = year;
             weatherViewModel.MonthFilter = month;
 
-            int pageSize = 16;
-            int pageNumber = (page ?? 1);
-
             Dictionary<int, string> dictionaryToSelectList = new Dictionary<int , string>();
             List<int> yearsFromDatabase = (from yearInt in weathers
                 select yearInt.WeatherDateTime.Year).Distinct().ToList();
@@ -74,7 +71,10 @@ namespace WeatherInMoscow.Controllers
                 new MonthSelectListModel { MonthId = 10, MonthName = "Октябрь" },
                 new MonthSelectListModel { MonthId = 11, MonthName = "Ноябрь" },
                 new MonthSelectListModel { MonthId = 12, MonthName = "Декабрь" },
-            };           
+            };
+
+            int pageSize = 16;
+            int pageNumber = (page ?? 1);
 
             weatherViewModel.Weathers = weathers.OrderBy(w => w.WeatherDateTime).ToPagedList(pageNumber, pageSize);
             weatherViewModel.Month = new SelectList(monthSelectList, "MonthID", "MonthName");
