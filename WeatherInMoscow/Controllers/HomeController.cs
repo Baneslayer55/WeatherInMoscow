@@ -3,6 +3,7 @@ using NPOI.XSSF.UserModel;
 using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -18,6 +19,7 @@ namespace WeatherInMoscow.Controllers
         public ActionResult DisplayWeather(int? month, int? year, int? page)
         {
             IQueryable<Weather> weathers = db.Weathers;
+            IQueryable<Weather> emptyWeathers = new List<Weather>().AsQueryable(); ;
 
             WeatherViewModel weatherViewModel = new WeatherViewModel();
 
@@ -40,6 +42,7 @@ namespace WeatherInMoscow.Controllers
 
             if (year == 0 && month != 0)
             {
+                weathers = emptyWeathers;
                 ViewBag.Message = "Пожалуйста, выберите год";
             }
             else if (year != 0 && month != 0)

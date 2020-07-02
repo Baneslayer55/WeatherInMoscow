@@ -9,15 +9,15 @@
     <form method="get">
         <div class="form-inline">
             <label> Год: </label>
-            @Html.DropDownList("year", Model.Year,
+           @Html.DropDownList("year", Model.Year,
                  new { @class = "form-control" })
             <label> Месяц: </label>
-            @Html.DropDownList("month", Model.Month as SelectList,
+           @Html.DropDownList("month", Model.Month as SelectList,
                  htmlAttributes: new { @class = "form-control" })
-            @if (Model.Weathers.PageCount > 1)
+           @if (Model.Weathers.PageCount > 1)
             {
-                <label>Номер страницы</label>
-                <input type="text" name="page" value="@Model.Weathers.PageNumber" />
+            <label>Номер страницы</label>
+            <input type="text" name="page" value="@Model.Weathers.PageNumber" />
             }
             <input type="submit" value="Применить" class="btn btn-default" />
             <br />@ViewBag.Message
