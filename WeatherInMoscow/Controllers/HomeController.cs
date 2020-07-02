@@ -3,7 +3,6 @@ using NPOI.XSSF.UserModel;
 using PagedList;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -19,7 +18,7 @@ namespace WeatherInMoscow.Controllers
         public ActionResult DisplayWeather(int? month, int? year, int? page)
         {
             IQueryable<Weather> weathers = db.Weathers;
-            IQueryable<Weather> emptyWeathers = new List<Weather>().AsQueryable(); ;
+            IQueryable<Weather> emptyWeathers = new List<Weather>().AsQueryable();
 
             WeatherViewModel weatherViewModel = new WeatherViewModel();
 
@@ -28,12 +27,17 @@ namespace WeatherInMoscow.Controllers
 
             int pageSize = 16;
             int pageNumber = (page ?? 1);
-            
-            List<int> years = (from yearInt in weathers
-                               select yearInt.WeatherDateTime.Year).Distinct().ToList();
 
+            Dictionary<int, string> dictionaryToSelectList = new Dictionary<int , string>();
+            List<int> yearsFromDatabase = (from yearInt in weathers
+                select yearInt.WeatherDateTime.Year).Distinct().ToList();
 
-            years.Insert(0, 0);
+            foreach (int y in yearsFromDatabase)
+            {
+                dictionaryToSelectList.Add(y, $"{y}");
+            }
+            dictionaryToSelectList.Add(0, "Все года");
+
 
             if (weathers.Count() == 0)
             {
@@ -74,7 +78,7 @@ namespace WeatherInMoscow.Controllers
 
             weatherViewModel.Weathers = weathers.OrderBy(w => w.WeatherDateTime).ToPagedList(pageNumber, pageSize);
             weatherViewModel.Month = new SelectList(monthSelectList, "MonthID", "MonthName");
-            weatherViewModel.Year = new SelectList(years);
+            weatherViewModel.Year = new SelectList(dictionaryToSelectList, "Key", "Value");
 
             return View(weatherViewModel);
         }
