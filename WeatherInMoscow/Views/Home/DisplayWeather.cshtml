@@ -17,7 +17,7 @@
            @if (Model.Weathers.PageCount > 1)
             {
             <label>Номер страницы</label>
-            <input type="text" name="page" value="@Model.Weathers.PageNumber" />
+            <input type="number" min="1" max="@Model.Weathers.PageCount" name="page" value="@Model.Weathers.PageNumber" />
             }
             <input type="submit" value="Применить" class="btn btn-default" />
             <br />@ViewBag.Message

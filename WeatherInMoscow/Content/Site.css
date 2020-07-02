@@ -42,9 +42,16 @@ input {
     width: 150px;
 }
 
-input[type=text] {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
     width: 50px;
     padding: 5px;
+    text-align: center;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
