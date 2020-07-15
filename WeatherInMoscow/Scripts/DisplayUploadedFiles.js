@@ -7,5 +7,4 @@ control.addEventListener("change", function (event) {
     for (; i < len; i++) {
         document.getElementById('fileList').innerHTML += files[i].name + "<br/>";
     }
-
 }, false);
